@@ -4,16 +4,6 @@
  */
 
 var express = require('express');
-//EXPRESS 4
-/*var favicon = require('serve-favicon');
-var methodOverride = require('method-override');
-var errorHandler = require('errorhandler');
-var bodyParser = require('body-parser');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var json = bodyParser.json();
-var static = require('serve-static');*/
 
 var app = express();
 var http = require('http').createServer(app);
@@ -29,29 +19,11 @@ var messagesPost = require('./routes/messagesPost');
 var forumPost = require('./routes/forumPost');
 var io = require('socket.io')(http);
 /*var session = require('client-sessions');*/
-var mysql = require('mysql');
-var htmlspecialchars = require('htmlspecialchars');
+//var mysql = require('mysql');
 
-// all environments
-//EXPRESS 4
-/*app.set('port', process.env.PORT || 3000);
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-app.use(favicon(__dirname + '/public/images/smdelogo.png'));
-app.use(methodOverride());
-app.use(logger('dev'));
-app.use(cookieParser('Sabemos todo sobre ti'));
-app.use(session({ 
-	secret: 'keyboard cat', 
-	cookie: { maxAge: 60000 }, 
-	resave: true, 
-	saveUninitialized: true }));
-app.use(bodyParser.json);
-app.use(bodyParser.urlencoded);
-app.use(static(path.join(__dirname, 'public')));*/
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 app.use(express.favicon());
 app.use(express.methodOverride());
 app.use(express.bodyParser({ keepExtensions: true, uploadDir: __dirname + '/public/publications' }));
@@ -65,60 +37,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 //variable global para jalar directorios
 global.__base = __dirname;
-
-/*app.use(session({
-}));*/
-
-/**
- * Chat
- */
-
- var chatsini = io.of('/chatsini').on('connection', function (socket){
-
- 	/*socket.on('join', function(data){
- 		socket.room = data.id;
- 		socket.join(data.id);
- 		console.log('YAY!!! si conecto :D')
-
- 	})*/
-
- 	//el id que le pasas se lo mandas desde el front, puede ser cualquier cosa
- 	socket.on('cambiarsala', function(data){
-		socket.leave(socket.room);//deja la sala actual
-		socket.room = data;//especificas la sala
-		socket.join(data);//te unes a la sala
- 		/*console.log('YAY!!! si cambio :D');
-		console.log('Sala: ' + socket.room);*/
-	})
-
- 	//Paso 2.
-	socket.on('mensaje', function(data){//recibe lo que quieras
-
-		/*console.log(' ');
-		console.log('---------------------------------------------------------------');
-		console.log('Sala: ' + socket.room);
-		console.log('Mensaje: ' + data.messageText);
-		console.log('Hora: ' + data.messageTime);
-		console.log('De: ' + data.userEmail);
-		console.log('---------------------------------------------------------------');
-		console.log(' ');*/
-
-		//esta linea dice que va a emitir un evento mostrar en la sala especifica
-		socket.to(socket.room).emit('mostrar', {
-		//socket.emit('mostrar', {
-				//le envias lo que tu quieras
-				//Recibes las variables desde el front
-				userEmail: data.userEmail,
-				userName: data.userName,
-				userLastName: data.userLastName,
-				userPhoto: data.userPhoto,
-                messageText: data.messageText,
-                messageTime: data.messageTime
-		});
-
-	});
-
- });
 
 // development only
 if ('development' == app.get('env')) {
@@ -301,14 +219,3 @@ http.listen(app.get('port'), function(){
 	forumPost.constructor(databaseInstance);
 	console.log('SMDE server listening on port ' + app.get('port'));
 });
-
-/* package.json EXPRESS 4
-	"serve-favicon": "*",
-    "method-override": "*",
-    "errorhandler": "*",
-    "body-parser": "*",
-    "morgan": "*",
-    "cookie-parser": "*",
-    "express-session": "*",
-    "serve-static": "*",
-*/
