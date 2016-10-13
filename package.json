@@ -9,6 +9,8 @@
     "express": "*",
     "pug": "*",
     "mongoose": "3.8.23",
-    "socket.io": "*"
+    "socket.io": "*",
+    "htmlspecialchars": "*",
+    "mime": "*"
   }
 }
