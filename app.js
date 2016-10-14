@@ -23,6 +23,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 //rutas
 
 app.get('/', routes.index);
+app.get('/empresas', routes.empresas);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
